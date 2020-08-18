@@ -147,3 +147,34 @@ CREATE TABLE IF NOT EXISTS registro (
     REFERENCES usuario (codU))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
+
+
+-- Registros
+-- -Ciclo
+insert into ciclo values (1);
+insert into ciclo values (2);
+insert into ciclo values (3);
+insert into ciclo values (4);
+insert into ciclo values (5);
+insert into ciclo values (6);
+insert into ciclo values (7);
+insert into ciclo values (8);
+insert into ciclo values (9);
+insert into ciclo values (10);
+
+-- -Facultad
+insert into facultad values (1, "Ingenieria");
+insert into facultad values (2, "Ciencias de la empresa");
+select * from facultad;
+
+-- -Carrera
+insert into carrera values (1, "Administracion de Empresas", 2);
+insert into carrera values (2, "Contabilidad", 2);
+insert into carrera values (3, "Educacion Primaria Intercultural", 2);
+insert into carrera values (4, "Ingenieria Agroindustrial", 1);
+insert into carrera values (5, "Ingenieria Ambiental", 1);
+insert into carrera values (6, "Ingenieria de Sistemas", 1);
+
+-- -Sede
+insert into sede values (1, "San Jeronimo");
+insert into sede values (2, "Talavera");
