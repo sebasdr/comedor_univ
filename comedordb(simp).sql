@@ -1,5 +1,4 @@
-create database comedordb;
-USE comedordb ;
+USE id14604912_comedordb ;
 
 -- -----------------------------------------------------
 -- Table `comedordb`.`facultad`
@@ -105,7 +104,7 @@ CREATE TABLE IF NOT EXISTS tarjeta (
     REFERENCES sede (codS),
   CONSTRAINT fk_tarjeta_usuario1
     FOREIGN KEY (usuario_dniU)
-    REFERENCES comedordb.usuario (dniU))
+    REFERENCES usuario (dniU))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
