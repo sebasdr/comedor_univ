@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Registrar estudiante</h1>
+        <form method="post"><pre>
+        Codigo     <input type="text" name="codigo" autofocus required>
+        DNI        <input type="text" name="dni" required>
+        Nombre     <input type="text" name="nombre" required>
+        Apellido   <input type="text" name="apellido" required>
+        Facultad   <select name="facultad" size="1">
+                   <option value="2">Ciencias de la Empresa</options>
+                   <option value="1">Ingenieria</options>
+                   </select>
+        Carrera    <select name="carrera" size="1">
+                   <option value="1">Administracion de Empresas</options>
+                   <option value="2">Contabilidad</options>
+                   <option value="3">Educacion Primaria Intercultural</options>
+                   <option value="4">Ingenieria Agroindustrial</options>
+                   <option value="5">Ingenieria Ambiental</options>
+                   <option value="6">Ingenieria de Sistemas</options>
+                   </select>
+        Telefono   <input type="text" name="telefono">
+        Direccion  <input type="text" name="direccion">
+                   <input type="submit" id="registrar" value="REGISTRAR">
+        </form>
+        <!--Aprender ajax para traer variables de php-->
+        <script src='jquery-3.2.1.min.js'></script>
+</body>
+</html>
