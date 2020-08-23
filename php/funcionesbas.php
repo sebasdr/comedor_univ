@@ -25,12 +25,28 @@ function reg_est($conexion){
         elseif($result->num_rows) echo "<br>Ya existe este estudiante";
         else{
             $result->close();
-            $stm="INSERT INTO estudiante VALUES(?,?,?,?,?,?,?,?)";
-            $result=$conexion->prepare($stm);
-            $result->bind_param("ssssssss",$codigo,$dni,$nombre,$apellido,$facultad,$carrera,$telefono,$direccion);
-            $result->execute();
-            if(!$result) echo "No se ha podido crear al estudiante";
-            else echo "<br>El estudiante $nombre $apellido se ha creado con exito";
+            $query="SELECT * FROM estudiante WHERE dniE='$dni'";
+            $result=$conexion->query($query);
+
+            if(!$result) echo "No se pudo cargar la consulta";
+            elseif($result->num_rows) echo "<br>El DNI $dni ya existe";
+            else{
+                $result->close();
+                $query="SELECT * FROM estudiante WHERE nombE='$nombre' and apelE='$apellido'";
+                $result=$conexion->query($query);
+
+                if(!$result) echo "No se pudo cargar la consulta";
+                elseif($result->num_rows) echo "<br>El estudiante $nombre $apellido ya existe";
+                else{
+                    $result->close();
+                    $stm="INSERT INTO estudiante VALUES(?,?,?,?,?,?,?,?)";
+                    $result=$conexion->prepare($stm);
+                    $result->bind_param("ssssssss",$codigo,$dni,$nombre,$apellido,$facultad,$carrera,$telefono,$direccion);
+                    $result->execute();
+                    if(!$result) echo "No se ha podido crear al estudiante";
+                    else echo "<br>El estudiante $nombre $apellido se ha creado con exito con codigo $codigo";
+                }
+            } 
         }
         $result->close();
     }else{
@@ -72,52 +88,71 @@ function asig_tar($conexion){
         $codigoe=mysql_entities_fix_string($conexion, $_POST["codigoe"]);
         $sede=mysql_entities_fix_string($conexion, $_POST["sede"]);
         $usuario=mysql_entities_fix_string($conexion, $_POST["usuario"]);
-        $query="SELECT * FROM tarjeta WHERE codT='$codigot' and sem='$sem' and estudiante_codE='$codigoe'";
+        $query="SELECT * FROM estudiante WHERE codE='$codigoe'";
         $result=$conexion->query($query);
-
+        
         if(!$result) echo "No se pudo cargar la consulta";
-        elseif($result->num_rows) echo "<br>El estudiante $codigoe ya tiene la tarjeta $codigot en el actual semestre $sem";
-        else{
+        elseif($result->num_rows){
             $result->close();
-            $query="SELECT * FROM tarjeta WHERE codT='$codigot' and sem='$sem'";
+            $query="SELECT * FROM tarjeta WHERE codT='$codigot' and sem='$sem' and estudiante_codE='$codigoe'";
             $result=$conexion->query($query);
 
             if(!$result) echo "No se pudo cargar la consulta";
-            elseif($result->num_rows) echo "<br>El estudiante $codigoe ya tiene la tarjeta $codigot en el actual semestre $sem";
+            elseif($result->num_rows) echo "<br>El estudiante $codigoe ya tiene una tarjeta asignada en el actual semestre $sem";
             else{
                 $result->close();
-                $query="SELECT * FROM tarjeta WHERE estudiante_codE='$codigoe' and sem='$sem'";
+                $query="SELECT * FROM tarjeta WHERE codT='$codigot' and sem='$sem'";
                 $result=$conexion->query($query);
 
                 if(!$result) echo "No se pudo cargar la consulta";
-                elseif($result->num_rows) echo "<br>El estudiante $codigoe ya tiene la tarjeta $codigot en el actual semestre $sem";
+                elseif($result->num_rows) echo "<br>El estudiante $codigoe no puede tener dos tarjetas en el actual semestre $sem";
                 else{
                     $result->close();
-                    $stm="INSERT INTO tarjeta VALUES(?,?,?,?,?,?)";
-                    $result=$conexion->prepare($stm);
-                    $result->bind_param("ssssss",$codigot,$sem,$fecha,$codigoe,$sede,$usuario);
-                    $result->execute();
-                    if(!$result) echo "No se ha podido asignar al estudiante una tarjeta";
-                    else echo "<br>Al estudiante $codigoe se le ha asignado la tarjeta $codigot correctamente";
+                    $query="SELECT * FROM tarjeta WHERE estudiante_codE='$codigoe' and sem='$sem'";
+                    $result=$conexion->query($query);
+
+                    if(!$result) echo "No se pudo cargar la consulta";
+                    elseif($result->num_rows) echo "<br>La tarjeta $codigot no puede ser asignada a dos estudiantes en el actual semestre $sem";
+                    else{
+                        $result->close();
+                        $stm="INSERT INTO tarjeta VALUES(?,?,?,?,?,?)";
+                        $result=$conexion->prepare($stm);
+                        $result->bind_param("ssssss",$codigot,$sem,$fecha,$codigoe,$sede,$usuario);
+                        $result->execute();
+                        if(!$result) echo "No se ha podido asignar al estudiante una tarjeta";
+                        else echo "<br>Al estudiante $codigoe se le ha asignado la tarjeta $codigot correctamente en el semestre $sem";
+                    }
                 }
             }
         }
+        else echo "No existe el estudiante $codigoe";
         $result->close();
     }else{
-        echo "Faltan datos";
+        //echo "Faltan datos";
         echo <<<_END
-        <h1>Registrar estudiante</h1>
+        <script src="../jquery-3.2.1.min.js"></script>
+        <h1>Asignar tarjeta</h1>
         <form action="funcionesbas.php" method="post"><pre>
         Codigo Tarjeta     <input type="text" name="codigot" autofocus required>
         Semestre           <input type="text" name="sem" required>
-                           <input type="hidden" name="fecha">
+                           <input type="hidden" id="fecha" name="fecha">
         Codigo Estudiante  <input type="text" name="codigoe" required>
         Sede               <select name="sede" size="1">
                            <option value="1">San Jeronimo</options>
                            <option value="2">Talavera</options>
                            </select>
-                           <input type="hidden" name="usuario">
+                           <input type="hidden" name="usuario" value="12345678">
+                           <input type="submit" value="ASIGNAR">
         </form>
+        <script>
+        $( document ).ready(function() {
+            var now = new Date();
+            var day = ("0" + now.getDate()).slice(-2);<!--slice: extrae caracteres de una str, aqui extrae los 2 ultimos char-->
+            var month = ("0" + (now.getMonth() + 1)).slice(-2);
+            var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+            $("#fecha").val(today);<!--val: se usa para inputs, text: se usa para etiquetas que no son input (user no interatua)-->
+        });
+        </script>
 _END;
     }
 }
