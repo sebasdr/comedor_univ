@@ -150,3 +150,10 @@ insert into carrera values (6, "Ingenieria de Sistemas", 1);
 -- -Sede
 insert into sede values (1, "San Jeronimo");
 insert into sede values (2, "Talavera");
+
+-- -Comidas
+insert into comidas values (1, "Desayuno");
+insert into comidas values (2, "Almuerzo");
+
+-- -Usuario
+insert into usuario values ("12345678", "a", "seb", "dom", null ,null);
