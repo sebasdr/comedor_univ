@@ -2,6 +2,7 @@
 
 require_once 'login.php';
 $conexion = new mysqli($hn, $un, $pw, $db);
+session_start();
 if ($conexion ->connect_error) die("No es posible conectar con la base de datos");
 
 //reg_est($conexion);
@@ -101,13 +102,13 @@ _END;
 
 //Asignar tarjeta
 function asig_tar($conexion){
-    if(isset($_POST["codigot"]) && isset($_POST["sem"]) && isset($_POST["fecha"]) && isset($_POST["codigoe"]) && isset($_POST["sede"]) && isset($_POST["usuario"])){
+    if(isset($_POST["codigot"]) && isset($_POST["sem"]) && isset($_POST["fecha"]) && isset($_POST["codigoe"]) && isset($_POST["sede"])){
         $codigot=mysql_entities_fix_string($conexion, $_POST["codigot"]);
         $sem=mysql_entities_fix_string($conexion, $_POST["sem"]);
         $fecha=mysql_entities_fix_string($conexion, $_POST["fecha"]);
         $codigoe=mysql_entities_fix_string($conexion, $_POST["codigoe"]);
         $sede=mysql_entities_fix_string($conexion, $_POST["sede"]);
-        $usuario=mysql_entities_fix_string($conexion, $_POST["usuario"]);
+        $usuario=$_SESSION["dni"];
         $query="SELECT * FROM estudiante WHERE codE='$codigoe'";
         $result=$conexion->query($query);
         
@@ -132,7 +133,7 @@ function asig_tar($conexion){
                     $result=$conexion->query($query);
 
                     if(!$result) echo "No se pudo cargar la consulta";
-                    elseif($result->num_rows) echo "<br>La tarjeta $codigot no puede ser asignada a dos estudiantes en el actual semestre $sem";
+                    elseif($result->num_rows) echo "<br>El estudiante $codigoe ya tiene una tarjeta asignada en el actual semestre $sem";
                     else{
                         $result->close();
                         $stm="INSERT INTO tarjeta VALUES(?,?,?,?,?,?)";
@@ -160,7 +161,7 @@ function asig_tar($conexion){
                            <option value="1">San Jeronimo</options>
                            <option value="2">Talavera</options>
                            </select>
-                           <input type="hidden" name="usuario" value="12345678">
+                           <!--<input type="hidden" name="usuario" value="12345678">-->
                            <input type="submit" value="ASIGNAR">
         </form>
         <script src="../jquery-3.2.1.min.js"></script>
@@ -172,20 +173,20 @@ function asig_tar($conexion){
             var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
             $("#fecha").val(today);<!--val: se usa para inputs, text: se usa para etiquetas que no son input (user no interatua)-->
         });
-        </script>*/
-_END;
+        </script>
+_END;*/
     }
 }
 
 //Registrar la tarjeta por dia, osea sellar la tarjeta
 function sellar_tar($conexion){
-    if(isset($_POST["codigot"]) && isset($_POST["sem"]) && isset($_POST["comida"]) && isset($_POST["fecha"]) && isset($_POST["hora"]) && isset($_POST["usuario"])){
+    if(isset($_POST["codigot"]) && isset($_POST["sem"]) && isset($_POST["comida"]) && isset($_POST["fecha"]) && isset($_POST["hora"])){
         $codigot=mysql_entities_fix_string($conexion, $_POST["codigot"]);
         $sem=mysql_entities_fix_string($conexion, $_POST["sem"]);
         $comida=mysql_entities_fix_string($conexion, $_POST["comida"]);
         $fecha=mysql_entities_fix_string($conexion, $_POST["fecha"]);
         $hora=mysql_entities_fix_string($conexion, $_POST["hora"]);
-        $usuario=mysql_entities_fix_string($conexion, $_POST["usuario"]);
+        $usuario=$_SESSION["dni"];
         $query="SELECT * FROM tarjeta WHERE codT='$codigot' and sem='$sem'";
         $result=$conexion->query($query);
 
@@ -209,8 +210,8 @@ function sellar_tar($conexion){
         }else echo "No existe la tarjeta $codigot";
         $result->close();
     }else{
-        echo "Faltan datos";
-        /*echo <<<_END
+        //echo "Faltan datos";
+        echo <<<_END
         <h1>Sellar tarjeta</h1>
         <form action="funcionesbas.php" method="post"><pre>
         Codigo Tarjeta  <input type="text" name="codigot" autofocus required>
@@ -221,7 +222,7 @@ function sellar_tar($conexion){
                         </select>
                         <input type="hidden" id="fecha" name="fecha">
                         <input type="hidden" id="hora" name="hora">
-                        <input type="hidden" name="usuario" value="12345678">
+                        <!--<input type="hidden" name="usuario" value="12345678">-->
                         <input type="submit" value="SELLAR">
         </form>
         <script src="../jquery-3.2.1.min.js"></script>
@@ -239,7 +240,7 @@ function sellar_tar($conexion){
             $("#hora").val(tohour);
         });
         </script>
-_END;*/
+_END;
     }
 }
 
@@ -252,5 +253,7 @@ function mysql_fix_string($conexion, $string){
     if (get_magic_quotes_gpc()) $string = stripslashes($string);
     return $conexion->real_escape_string($string);
 }
+
+$conexion->close();
 
 ?>
