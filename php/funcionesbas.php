@@ -94,8 +94,8 @@ function reg_est($conexion){
             $('#facultad').change(fillCarrera);//Cada vez que se elija (cambie de eleccion) una nueva facultad, change ejecuta fillCarrera
             fillCarrera();//para darle los valores iniciales al segundo combo la primera vez
         });
-        </script>*/
-_END;
+        </script>
+_END;*/
     }
     
 }
