@@ -6,7 +6,7 @@ if ($conexion ->connect_error) die("No es posible conectar con la base de datos"
 
 //reg_est($conexion);
 //asig_tar($conexion);
-//sellar_tar($conexion);
+sellar_tar($conexion);
 
 //Registrar estudiante
 function reg_est($conexion){
@@ -186,39 +186,31 @@ function sellar_tar($conexion){
         $fecha=mysql_entities_fix_string($conexion, $_POST["fecha"]);
         $hora=mysql_entities_fix_string($conexion, $_POST["hora"]);
         $usuario=mysql_entities_fix_string($conexion, $_POST["usuario"]);
-        $query="SELECT * FROM tarjeta WHERE codT='$codigot'";
+        $query="SELECT * FROM tarjeta WHERE codT='$codigot' and sem='$sem'";
         $result=$conexion->query($query);
 
         if(!$result) echo "No se pudo cargar la consulta";
         elseif($result->num_rows){
             $result->close();
-            $query="SELECT * FROM estudiante WHERE dniE='$dni'";
+            $query="SELECT * FROM registro WHERE tarjeta_codT='$codigot' and tarjeta_sem='$sem' and comidas_codCo='$comida'";
             $result=$conexion->query($query);
 
             if(!$result) echo "No se pudo cargar la consulta";
-            elseif($result->num_rows) echo "<br>El DNI $dni ya existe";
+            elseif($result->num_rows) echo "<br>La tarjeta $codigot ya se ha sellado";
             else{
                 $result->close();
-                $query="SELECT * FROM estudiante WHERE nombE='$nombre' and apelE='$apellido'";
-                $result=$conexion->query($query);
-
-                if(!$result) echo "No se pudo cargar la consulta";
-                elseif($result->num_rows) echo "<br>El estudiante $nombre $apellido ya existe";
-                else{
-                    $result->close();
-                    $stm="INSERT INTO registro VALUES(?,?,?,?,?,?)";
-                    $result=$conexion->prepare($stm);
-                    $result->bind_param("ssssssss",$codigot,$sem,$comida,$fecha,$hora,$usuario);
-                    $result->execute();
-                    if(!$result) echo "No se ha podido sellar la tarjeta";
-                    else echo "<br>La tarjeta $codigot ha sido sellada el dia $fecha a las $hora";
-                }
+                $stm="INSERT INTO registro VALUES(?,?,?,?,?,?)";
+                $result=$conexion->prepare($stm);
+                $result->bind_param("ssssss",$codigot,$sem,$comida,$fecha,$hora,$usuario);
+                $result->execute();
+                if(!$result) echo "No se ha podido sellar la tarjeta";
+                else echo "<br>La tarjeta $codigot ha sido sellada el dia $fecha a las $hora";
             } 
         }else echo "No existe la tarjeta $codigot";
         $result->close();
     }else{
-        //echo "Faltan datos";
-        echo <<<_END
+        echo "Faltan datos";
+        /*echo <<<_END
         <h1>Sellar tarjeta</h1>
         <form action="funcionesbas.php" method="post"><pre>
         Codigo Tarjeta  <input type="text" name="codigot" autofocus required>
@@ -227,8 +219,8 @@ function sellar_tar($conexion){
                         <option value="1">Desayuno</options>
                         <option value="2">Almuerzo</options>
                         </select>
-                        <input type="text" id="fecha" name="fecha">
-                        <input type="text" id="hora" name="hora">
+                        <input type="hidden" id="fecha" name="fecha">
+                        <input type="hidden" id="hora" name="hora">
                         <input type="hidden" name="usuario" value="12345678">
                         <input type="submit" value="SELLAR">
         </form>
@@ -247,7 +239,7 @@ function sellar_tar($conexion){
             $("#hora").val(tohour);
         });
         </script>
-_END;
+_END;*/
     }
 }
 
