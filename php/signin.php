@@ -11,7 +11,7 @@ if(isset($_POST['dni']) && isset($_POST['pass'])){
     $query = "SELECT * FROM usuario WHERE dniU='$dni'";
     $result = $conexion->query($query);
 
-    if (!$result) echo "No se pudo realizar la consulta";
+    if (!$result) echo json_encode("er1");
     elseif ($result->num_rows){
         $row = $result->fetch_array(MYSQLI_NUM);
         $result->close();
@@ -19,18 +19,11 @@ if(isset($_POST['dni']) && isset($_POST['pass'])){
         if (password_verify($pass, $row[1])){
             session_start();
             $_SESSION["dni"]=$row[0];
-            echo "Hola $row[0], Bienvenido <a href='funcionesbas.php'>Click para continuar</a>";
-        }else echo "Password incorrecto";
-    }else echo "No existe el usuario";
+            echo json_encode("succ");
+        }else echo json_encode("er2");
+    }else echo json_encode("er3");
 }else{
-    echo <<<_END
-    <h1>Ingresa</h1>
-    <form action="signin.php" method="post"><pre>
-    DNI         <input type="text" name="dni" required>
-    Password    <input type="password" name="pass" required>
-                <input type="submit" value="INGRESAR">
-    </form>
-_END;
+    echo json_encode("erif");
 }
 
 $conexion->close();

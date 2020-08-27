@@ -15,45 +15,33 @@ if(isset($_POST["dni"]) && isset($_POST["pass"]) && isset($_POST["nombre"]) && i
     $query="SELECT * FROM usuario WHERE dniU='$dni'";
     $result=$conexion->query($query);
 
-    if(!$result) echo "No se pudo cargar la consulta";
-    elseif($result->num_rows) echo "<br>Ya existe este usuario";
+    if(!$result) echo json_encode("er1");
+    elseif($result->num_rows) echo json_encode("er2");
     else{
         $result->close();
         $query="SELECT * FROM usuario WHERE nombU='$nombre' and apelU='$apellido'";
         $result=$conexion->query($query);
 
-        if(!$result) echo "No se pudo cargar la consulta";
-        elseif($result->num_rows) echo "<br>El usuario $nombre $apellido ya existe";
+        if(!$result) echo json_encode("er1");
+        elseif($result->num_rows) echo json_encode("er3");
         else{
             $result->close();
             $stm="INSERT INTO usuario VALUES(?,?,?,?,?,?)";
             $result=$conexion->prepare($stm);
-            if (!$result) echo "Error de conexion";
+            if (!$result) echo json_encode("er1");
             else{
                 $result->bind_param("ssssss",$dni,$pass,$nombre,$apellido,$telefono,$direccion);
                 $result->execute();
-                if(!$result) echo "Error al registrarse";
+                if(!$result) echo json_encode("er1");
                 else {
-                    echo "<br>El usuario $nombre $apellido se ha creado con exito con dni $dni";
-                    echo "<br>Ahora intente <a href='signin.php'>Ingresar</a>";
+                    echo json_encode("El usuario $nombre $apellido se ha creado con exito con DNI $dni");
                 }
             }
         }
     }
     $result->close();
 }else{
-    echo <<<_END
-    <h1>Registrate</h1>
-    <form action="signup.php" method="post"><pre>
-    DNI         <input type="text" name="dni" placeholder="Este sera su codigo de usuario" required>
-    Password    <input type="password" name="pass" required>
-    Nombre      <input type="text" name="nombre" required>
-    Apellido    <input type="text" name="apellido" required>
-    Telefono    <input type="text" name="telefono">
-    Direccion   <input type="text" name="direccion">
-                <input type="submit" value="REGISTRAR">
-    </form>
-_END;
+    echo json_encode("erif");
 }
 
 function mysql_entities_fix_string($conexion, $string){
