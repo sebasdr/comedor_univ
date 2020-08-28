@@ -23,36 +23,36 @@ function reg_est($conexion){
         $query="SELECT * FROM estudiante WHERE codE='$codigo'";
         $result=$conexion->query($query);
 
-        if(!$result) echo "No se pudo cargar la consulta";
-        elseif($result->num_rows) echo "<br>Ya existe este estudiante";
+        if(!$result) echo json_encode("er1");
+        elseif($result->num_rows) echo json_encode("er2");
         else{
             $result->close();
             $query="SELECT * FROM estudiante WHERE dniE='$dni'";
             $result=$conexion->query($query);
 
-            if(!$result) echo "No se pudo cargar la consulta";
-            elseif($result->num_rows) echo "<br>El DNI $dni ya existe";
+            if(!$result) echo json_encode("er1");
+            elseif($result->num_rows) echo json_encode("er3");
             else{
                 $result->close();
                 $query="SELECT * FROM estudiante WHERE nombE='$nombre' and apelE='$apellido'";
                 $result=$conexion->query($query);
 
-                if(!$result) echo "No se pudo cargar la consulta";
-                elseif($result->num_rows) echo "<br>El estudiante $nombre $apellido ya existe";
+                if(!$result) echo json_encode("er1");
+                elseif($result->num_rows) echo json_encode("er4");
                 else{
                     $result->close();
                     $stm="INSERT INTO estudiante VALUES(?,?,?,?,?,?,?,?)";
                     $result=$conexion->prepare($stm);
                     $result->bind_param("ssssssss",$codigo,$dni,$nombre,$apellido,$facultad,$carrera,$telefono,$direccion);
                     $result->execute();
-                    if(!$result) echo "No se ha podido crear al estudiante";
-                    else echo "<br>El estudiante $nombre $apellido se ha creado con exito con codigo $codigo";
+                    if(!$result) echo json_encode("er1");
+                    else echo json_encode("succ");
                 }
             } 
         }
         $result->close();
     }else{
-        echo "Faltan datos";
+        echo json_encode("erif");
         /*echo <<<_END
         <h1>Registrar estudiante</h1>
         <form action="funcionesbas.php" method="post"><pre>
@@ -97,7 +97,6 @@ function reg_est($conexion){
         </script>
 _END;*/
     }
-    
 }
 
 //Asignar tarjeta
@@ -112,44 +111,44 @@ function asig_tar($conexion){
         $query="SELECT * FROM estudiante WHERE codE='$codigoe'";
         $result=$conexion->query($query);
         
-        if(!$result) echo "No se pudo cargar la consulta";
+        if(!$result) echo json_encode("er1");
         elseif($result->num_rows){
             $result->close();
             $query="SELECT * FROM tarjeta WHERE codT='$codigot' and sem='$sem' and estudiante_codE='$codigoe'";
             $result=$conexion->query($query);
 
-            if(!$result) echo "No se pudo cargar la consulta";
-            elseif($result->num_rows) echo "<br>El estudiante $codigoe ya tiene una tarjeta asignada en el actual semestre $sem";
+            if(!$result) echo json_encode("er1");
+            elseif($result->num_rows) echo json_encode("er2");
             else{
                 $result->close();
                 $query="SELECT * FROM tarjeta WHERE codT='$codigot' and sem='$sem'";
                 $result=$conexion->query($query);
 
-                if(!$result) echo "No se pudo cargar la consulta";
-                elseif($result->num_rows) echo "<br>El estudiante $codigoe no puede tener dos tarjetas en el actual semestre $sem";
+                if(!$result) echo json_encode("er1");
+                elseif($result->num_rows) echo json_encode("er3");
                 else{
                     $result->close();
                     $query="SELECT * FROM tarjeta WHERE estudiante_codE='$codigoe' and sem='$sem'";
                     $result=$conexion->query($query);
 
-                    if(!$result) echo "No se pudo cargar la consulta";
-                    elseif($result->num_rows) echo "<br>El estudiante $codigoe ya tiene una tarjeta asignada en el actual semestre $sem";
+                    if(!$result) echo json_encode("er1");
+                    elseif($result->num_rows) echo json_encode("er2");
                     else{
                         $result->close();
                         $stm="INSERT INTO tarjeta VALUES(?,?,?,?,?,?)";
                         $result=$conexion->prepare($stm);
                         $result->bind_param("ssssss",$codigot,$sem,$fecha,$codigoe,$sede,$usuario);
                         $result->execute();
-                        if(!$result) echo "No se ha podido asignar al estudiante una tarjeta";
-                        else echo "<br>Al estudiante $codigoe se le ha asignado la tarjeta $codigot correctamente en el semestre $sem";
+                        if(!$result) echo json_encode("er1");
+                        else echo json_encode("succ");
                     }
                 }
             }
         }
-        else echo "No existe el estudiante $codigoe";
+        else echo json_encode("er4");
         $result->close();
     }else{
-        echo "Faltan datos";
+        echo json_encode("erif");
         /*echo <<<_END
         <h1>Asignar tarjeta</h1>
         <form action="funcionesbas.php" method="post"><pre>
@@ -190,28 +189,28 @@ function sellar_tar($conexion){
         $query="SELECT * FROM tarjeta WHERE codT='$codigot' and sem='$sem'";
         $result=$conexion->query($query);
 
-        if(!$result) echo "No se pudo cargar la consulta";
+        if(!$result) echo json_encode("er1");
         elseif($result->num_rows){
             $result->close();
             $query="SELECT * FROM registro WHERE tarjeta_codT='$codigot' and tarjeta_sem='$sem' and comidas_codCo='$comida'";
             $result=$conexion->query($query);
 
-            if(!$result) echo "No se pudo cargar la consulta";
-            elseif($result->num_rows) echo "<br>La tarjeta $codigot ya se ha sellado";
+            if(!$result) echo json_encode("er1");
+            elseif($result->num_rows) echo json_encode("er2");
             else{
                 $result->close();
                 $stm="INSERT INTO registro VALUES(?,?,?,?,?,?)";
                 $result=$conexion->prepare($stm);
                 $result->bind_param("ssssss",$codigot,$sem,$comida,$fecha,$hora,$usuario);
                 $result->execute();
-                if(!$result) echo "No se ha podido sellar la tarjeta";
-                else echo "<br>La tarjeta $codigot ha sido sellada el dia $fecha a las $hora";
+                if(!$result) echo json_encode("er1");
+                else echo json_encode("succ");
             } 
-        }else echo "No existe la tarjeta $codigot";
+        }else echo json_encode("er3");
         $result->close();
     }else{
-        //echo "Faltan datos";
-        echo <<<_END
+        echo json_encode("erif");
+        /*echo <<<_END
         <h1>Sellar tarjeta</h1>
         <form action="funcionesbas.php" method="post"><pre>
         Codigo Tarjeta  <input type="text" name="codigot" autofocus required>
@@ -240,7 +239,7 @@ function sellar_tar($conexion){
             $("#hora").val(tohour);
         });
         </script>
-_END;
+_END;*/
     }
 }
 

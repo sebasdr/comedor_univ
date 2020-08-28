@@ -1,3 +1,12 @@
+$( document ).ready(function() {
+    var now = new Date();
+    var day = ("0" + now.getDate()).slice(-2);
+    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+    var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+    $("#fecha").val(today);
+});
+
+
 var formulario = document.getElementById('formulario')
 var respuesta = document.getElementById('respuesta')
 
@@ -12,7 +21,7 @@ formulario.addEventListener('submit', function(e){//EL e sirve para evitar que s
     //console.log(datos.get('usuario'))//get(name del imput)
     //console.log(datos.get('pass'))
 
-    fetch('php/signin.php',{
+    fetch('php/funcionesbas.php',{
         method: 'POST',//Para que sea post
         body: datos//MAndandole los datos del formdata al php
     })
@@ -28,13 +37,19 @@ formulario.addEventListener('submit', function(e){//EL e sirve para evitar que s
         }else if(data === 'er2'){
             respuesta.innerHTML = `
             <div class='.alert alert-warning' role="alert">
-            Password incorrecto.
+            El estudiante ${datos.get('codigoe')} ya tiene una tarjeta asignada en el actual semestre ${datos.get('sem')}.
             </div>
             `
         }else if(data === 'er3'){
             respuesta.innerHTML = `
             <div class='.alert alert-warning' role="alert">
-            No existe el usuario.
+            El estudiante ${datos.get('codigoe')} no puede tener dos tarjetas en el actual semestre ${datos.get('sem')}.
+            </div>
+            `
+        }else if(data === 'er4'){
+            respuesta.innerHTML = `
+            <div class='.alert alert-warning' role="alert">
+            No existe el estudiante ${datos.get('codigoe')}.
             </div>
             `
         }else if(data === 'erif'){
@@ -46,10 +61,10 @@ formulario.addEventListener('submit', function(e){//EL e sirve para evitar que s
         }else if(data === 'succ'){
             respuesta.innerHTML = `
             <div class='.alert alert-primary' role="alert">
-            Bienvenido.
+            Al estudiante ${datos.get('codigoe')} se le ha asignado la tarjeta ${datos.get('codigot')} correctamente en el semestre ${datos.get('sem')}.
             </div>
-            <script>${window.location.href='registrarest.html'}</script>
             `
         }
     })
+
 })

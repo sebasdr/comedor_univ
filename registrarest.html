@@ -3,32 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <title>Comedor Universitario UNAJMA</title>
 </head>
 <body>
-    <h1>Registrar estudiante</h1>
-        <form method="post"><pre>
-        Codigo     <input type="text" name="codigo" autofocus required>
-        DNI        <input type="text" name="dni" required>
-        Nombre     <input type="text" name="nombre" required>
-        Apellido   <input type="text" name="apellido" required>
-        Facultad   <select name="facultad" size="1">
-                   <option value="2">Ciencias de la Empresa</options>
-                   <option value="1">Ingenieria</options>
-                   </select>
-        Carrera    <select name="carrera" size="1">
-                   <option value="1">Administracion de Empresas</options>
-                   <option value="2">Contabilidad</options>
-                   <option value="3">Educacion Primaria Intercultural</options>
-                   <option value="4">Ingenieria Agroindustrial</options>
-                   <option value="5">Ingenieria Ambiental</options>
-                   <option value="6">Ingenieria de Sistemas</options>
-                   </select>
-        Telefono   <input type="text" name="telefono">
-        Direccion  <input type="text" name="direccion">
-                   <input type="submit" id="registrar" value="REGISTRAR">
+    <div class="container my-5">
+        <h2>Registrar estudiante</h2>
+        <form id="formulario">
+            <input type="text" name="codigo" placeholder="Codigo de estudiante" class="form-control my-3" minlength="10" maxlength="10" required>
+            <input type="text" name="dni" placeholder="DNI de estudiante" class="form-control my-3" minlength="8" maxlength="8" required>
+            <input type="text" name="nombre" placeholder="Nombre(s)" class="form-control my-3" minlength="2" maxlength="45" required>
+            <input type="text" name="apellido" placeholder="Apellidos" class="form-control my-3" minlength="2" maxlength="45" required>
+            <select id="facultad" name="facultad" size="1">
+                <option value="2">Ciencias de la Empresa</option>
+                <option value="1">Ingenieria</option>
+            </select>
+            <select id="carrera" name="carrera" size="1">
+            </select>
+            <input type="text" name="telefono" placeholder="Telefono" class="form-control my-3" minlength="7" maxlength="9">
+            <input type="text" name="direccion" placeholder="Direccion" class="form-control my-3" minlength="5" maxlength="200">
+            <button type="submit">Registrar</button>
         </form>
-        <!--Aprender ajax para traer variables de php-->
-        <script src='jquery-3.2.1.min.js'></script>
+        <div class="mt-3" id="respuesta">
+        </div>
+    </div>
+
+    <script src="jquery-3.2.1.min.js"></script>
+    <script src="js/resgristrarest.js"></script>
 </body>
 </html>
