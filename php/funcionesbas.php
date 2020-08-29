@@ -5,9 +5,28 @@ $conexion = new mysqli($hn, $un, $pw, $db);
 session_start();
 if ($conexion ->connect_error) die("No es posible conectar con la base de datos");
 
-//reg_est($conexion);
-//asig_tar($conexion);
-sellar_tar($conexion);
+/* if (isset($_POST["cond"])){
+    $cond=mysql_entities_fix_string($conexion,$_POST["cond"]);
+    if($cond === "1"){
+        reg_est($conexion);
+    }elseif($cond === "2"){
+        asig_tar($conexion);
+    }elseif($cond === "3"){
+        sellar_tar($conexion);
+    }
+}else{
+    echo json_encode("er1");
+} */
+
+if (isset($_POST["codigo"]) && isset($_POST["dni"]) && isset($_POST["nombre"]) && isset($_POST["apellido"]) && isset($_POST["facultad"]) && isset($_POST["carrera"])){
+    reg_est($conexion);
+}elseif(isset($_POST["codigot"]) && isset($_POST["sem"]) && isset($_POST["fecha"]) && isset($_POST["codigoe"]) && isset($_POST["sede"])){
+    asig_tar($conexion);
+}elseif(isset($_POST["codigot"]) && isset($_POST["sem"]) && isset($_POST["comida"]) && isset($_POST["fecha"]) && isset($_POST["hora"])){
+    sellar_tar($conexion);
+}else{
+    echo json_encode("er1");
+}
 
 //Registrar estudiante
 function reg_est($conexion){
