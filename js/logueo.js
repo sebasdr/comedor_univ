@@ -48,7 +48,7 @@ formulario.addEventListener('submit', function(e){//EL e sirve para evitar que s
             <div class='.alert alert-primary' role="alert">
             Bienvenido.
             </div>
-            <script>${window.location.href='registrarest.html'}</script>
+            <script>${window.location.href='base.html'}</script>
             `
         }
     })
