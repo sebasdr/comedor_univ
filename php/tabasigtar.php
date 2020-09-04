@@ -2,9 +2,12 @@
 
 require_once 'login.php';
 $conexion = new mysqli($hn, $un, $pw, $db);
+session_start();
 if ($conexion ->connect_error) die("No es posible conectar con la base de datos");
 
-tab_asig_tar($conexion);
+if(isset($_SESSION["dni"])){
+    tab_asig_tar($conexion);
+}else echo json_encode("erse");
 
 function tab_asig_tar($conexion){
     $query="SELECT * FROM tarjeta ORDER BY sem";

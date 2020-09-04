@@ -90,6 +90,11 @@ $(function(){
     .then( res => res.json() )//porque no le estamos enviando de forma correcta (objeto json desde php)
     .then( data => {
     //console.log(data[0].nombre)
+    if(data === "erse"){
+        respuesta.innerHTML = `
+        <script>${window.location.href='index.html'}</script>
+        `
+    }
     tabla(data)//A esta funcion le estamos mandando la data
   })
 })

@@ -2,9 +2,12 @@
 
 require_once 'login.php';
 $conexion = new mysqli($hn, $un, $pw, $db);
+session_start();
 if ($conexion ->connect_error) die("No es posible conectar con la base de datos");
 
-tab_reg_est($conexion);
+if(isset($_SESSION["dni"])){
+    tab_reg_est($conexion);
+}else echo json_encode("erse");
 
 function tab_reg_est($conexion){
     $query="SELECT * FROM estudiante ORDER BY codE";
