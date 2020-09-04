@@ -64,7 +64,44 @@ formulario.addEventListener('submit', function(e){//EL e sirve para evitar que s
             Al estudiante ${datos.get('codigoe')} se le ha asignado la tarjeta ${datos.get('codigot')} correctamente en el semestre ${datos.get('sem')}.
             </div>
             `
+            fetch('php/tabasigtar.php')
+            .then( res => res.json() )//porque no le estamos enviando de forma correcta (objeto json desde php)
+            .then( data => {
+            //console.log(data[0].nombre)
+            tabla(data)//A esta funcion le estamos mandando la data
+            })
         }
     })
 
 })
+
+var tablatar = document.querySelector('#tablatar');
+$(function(){
+  fetch('php/tabasigtar.php')
+    .then( res => res.json() )//porque no le estamos enviando de forma correcta (objeto json desde php)
+    .then( data => {
+    //console.log(data[0].nombre)
+    tabla(data)//A esta funcion le estamos mandando la data
+  })
+})
+
+//Funcion que genera tablas
+function tabla(data){
+//console.log(dato)
+tablatar.innerHTML = ''
+  for(let value of data){//Recorre el array de objetos, y lo separa en los objetos que tenga con "valor" para acceder a sus propiedades
+  console.log(value.codE)
+  tablatar.innerHTML += `
+          
+  <tr>
+    <th scope="row">${ value.codT }</th>
+    <td>${ value.sem }</td>
+    <td>${ value.fechC }</td>
+    <td>${ value.codE }</td>
+    <td>${ value.sede }</td>
+    <td>${ value.usuario }</td>
+ 
+  `
+  }
+//Con el += va ir concatenando las tablas, es decir, muestra la primera tabla, luego muestra la segunda sin borrar la primera
+}
