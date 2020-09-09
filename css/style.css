@@ -1,0 +1,13 @@
+#derecha{
+    width: 48%;
+    float: right;
+}
+
+#izquierda{
+    width: 48%;
+}
+
+.scroll{
+    height: 230px;
+    overflow: scroll;
+}

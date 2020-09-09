@@ -107,8 +107,8 @@ tablaest.innerHTML = ''
   console.log(value.nombre)
   tablaest.innerHTML += `
           
-  <tr>
-    <th scope="row">${ value.codigo }</th>
+  <tr style="width: 100%">
+    <td>${ value.codigo }</th>
     <td>${ value.dni }</td>
     <td>${ value.nombre }</td>
     <td>${ value.apellido }</td>
